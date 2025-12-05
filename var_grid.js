@@ -927,4 +927,4 @@ const btcAutoTrader = new BTCAutoTrading();
 // btcAutoTrader.cancelAllOrder();       // 关闭所有挂单
 
 // 建议第一次运行前先手动设置好仓位数量，然后执行：
-// btcAutoTrader.startAutoTrading(1000);
+// btcAutoTrader.startAutoTrading(3000);
