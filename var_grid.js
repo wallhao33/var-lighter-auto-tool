@@ -20,7 +20,7 @@ class BTCAutoTrading {
 
     // ========== 网格策略核心配置（全部集中在这里调参！）==========
     static GRID_STRATEGY_CONFIG = {
-        TOTAL_ORDERS: 12,               // 固定50单滑动窗口
+        TOTAL_ORDERS: 18,               // 固定50单滑动窗口
 
         // 窗口宽度（核心参数！建议 0.08~0.18）
         WINDOW_PERCENT: 0.12,           // 12% → 7万时 ≈ ±4200美元范围
@@ -30,7 +30,7 @@ class BTCAutoTrading {
         BUY_RATIO:  0.5,               // 45% ≈ 22~23个买单
 
         // 网格间距
-        BASE_PRICE_INTERVAL: 20,        // 基础间距（会自动微调保证填满单数）
+        BASE_PRICE_INTERVAL: 10,        // 基础间距（会自动微调保证填满单数）
         SAFE_GAP: 20,                   // 比当前盘口再偏移一点，防止瞬成
 
         // 安全保护
@@ -946,27 +946,6 @@ class BTCOrderManager {
 
     async cancelByPrice(price) {
         console.log(`准备取消 $${price}`);
-        const currentPrice = await this.getCurrentPrice();
-        if (currentPrice) {
-            const prices = Array.isArray(price) ? price : [price];
-            const shouldSkip = prices.some(targetPrice => {
-                const targetNum = Number(String(targetPrice).replace(/[^0-9.]/g, ''));
-                if (!targetNum) return false;
-                
-                const cfg = {
-                    BASE_PRICE_INTERVAL: 20  // 假设这是配置中的值
-                };
-                const priceDiff = Math.abs(targetNum - currentPrice);
-                const isNearCurrentPrice = priceDiff <= cfg.BASE_PRICE_INTERVAL;
-                
-                if (isNearCurrentPrice) {
-                    console.log(`跳过撤单：价格接近当前价格 (差值: ${priceDiff.toFixed(1)})`);
-                }
-                return isNearCurrentPrice;
-            });
-            
-            if (shouldSkip) return;
-        }
         
         const prices = Array.isArray(price) ? price : [price];
         
@@ -998,12 +977,7 @@ class BTCOrderManager {
                                     [...document.querySelectorAll('button')].find(btn => 
                                         btn.textContent.trim() === '确认' && 
                                         btn.classList.contains('bg-red')
-                                    ) ||
-                                    document.querySelector('button[autofocus]') ||
-                                    document.querySelector('button.bg-red.h-8.px-3.py-1.text-xs.rounded-md') ||
-                                    [...document.querySelectorAll('button')].find(btn => 
-                                        btn.textContent.includes('确认')
-                                    );
+                                    ) ;
 
                                 if (confirmBtn && confirmBtn.offsetParent !== null) {
                                     clearInterval(timer);
