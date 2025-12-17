@@ -4,9 +4,9 @@ class BTCAutoTrading {
     static TRADING_CONFIG = {
         START_PRICE: 80000,
         END_PRICE: 100000,
-        MIN_ORDER_INTERVAL: 2000,     // 下单最小间隔10秒（防风控）
-        ORDER_COOLDOWN: 1500,          // 单个订单成功后冷却3秒
-        MONITOR_INTERVAL: 3000,       // 主循环检查间隔（建议8~15秒）
+        MIN_ORDER_INTERVAL: 5000,     // 下单最小间隔10秒（防风控）
+        ORDER_COOLDOWN: 5000,          // 单个订单成功后冷却3秒
+        MONITOR_INTERVAL: 5000,       // 主循环检查间隔（建议8~15秒）
         MAX_PROCESSED_ORDERS: 100,
         POSITION_CHECK_DELAY: 2000,
         MAX_POSITION_CHECKS: 60,
@@ -20,7 +20,7 @@ class BTCAutoTrading {
 
     // ========== 网格策略核心配置（全部集中在这里调参！）==========
     static GRID_STRATEGY_CONFIG = {
-        TOTAL_ORDERS: 18,               // 固定50单滑动窗口
+        TOTAL_ORDERS: 10,               // 固定50单滑动窗口
 
         // 窗口宽度（核心参数！建议 0.08~0.18）
         WINDOW_PERCENT: 0.12,           // 12% → 7万时 ≈ ±4200美元范围
@@ -30,13 +30,13 @@ class BTCAutoTrading {
         BUY_RATIO:  0.5,               // 45% ≈ 22~23个买单
 
         // 网格间距
-        BASE_PRICE_INTERVAL: 10,        // 基础间距（会自动微调保证填满单数）
+        BASE_PRICE_INTERVAL: 35,        // 基础间距（会自动微调保证填满单数）
         SAFE_GAP: 20,                   // 比当前盘口再偏移一点，防止瞬成
 
         // 安全保护
         MAX_DRIFT_BUFFER: 2000,         // 超出窗口太多自动停止扩展
         MIN_VALID_PRICE: 10000,         // 防止崩盘挂到地板价
-        MAX_MULTIPLIER: 15,         // 动态开仓大小的比例最大开仓倍数
+        MAX_MULTIPLIER: 20,         // 动态开仓大小的比例最大开仓倍数
 
         // --- 策略配置 ---
         RSI_MIN: 30,                   // RSI 下限
@@ -470,7 +470,7 @@ class BTCAutoTrading {
                         }
                     }
                     await this.orderManager.cancelByPrice(order.price);
-                    await this.delay(500);
+                    await this.delay(2000);
                 }
             }
             
@@ -1045,7 +1045,7 @@ class BTCOrderManager {
 const btcAutoTrader = new BTCAutoTrading();
 
 // ==================== 快捷指令 ====================
-btcAutoTrader.startAutoTrading(3000);    // 启动交易
+btcAutoTrader.startAutoTrading(5000);    // 启动交易
 // btcAutoTrader.stopAutoTrading();         // 停止交易
 // btcAutoTrader.getStatus();               // 查看状态（含风控冷却信息）
 // btcAutoTrader.clearOrderHistory();       // 清空记录
